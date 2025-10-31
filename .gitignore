@@ -1,0 +1,114 @@
+# .gitignore for crypto-mlops
+# Purpose: ignore common Python artifacts, IDE files, OS temp files, virtualenvs, caches, logs,
+# and large raw data files. Also includes comments listing unwanted files observed in the workspace.
+
+# ---------------------------
+# Unwanted files observed in this workspace (explicit mentions)
+# ---------------------------
+# - feast_repo/crypto_features/__pycache__/
+# - feast_repo/crypto_features/feature_repo/__pycache__/
+# - feast_repo/crypto_features/feature_repo/data/crypto_prices.parquet    (large data file - track with DVC instead of Git)
+# - any *.pyc, .pyo, or other byte-compiled files
+# - .vscode/ and .idea/ (editor settings)
+# - .env and other local secret files
+# - OS temp files like .DS_Store and Thumbs.db
+
+# ---------------------------
+# Byte-compiled / cache
+# ---------------------------
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+
+# ---------------------------
+# Distribution / build
+# ---------------------------
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# ---------------------------
+# Virtual environments
+# ---------------------------
+.venv/
+venv/
+env/
+ENV/
+.python-version
+
+# ---------------------------
+# Test, coverage, and caches
+# ---------------------------
+.pytest_cache/
+.tox/
+.cache/
+coverage.xml
+
+# ---------------------------
+# Jupyter
+# ---------------------------
+.ipynb_checkpoints/
+*.ipynb
+
+# ---------------------------
+# Logs and runtime
+# ---------------------------
+*.log
+logs/
+*.pid
+*.sock
+
+# ---------------------------
+# IDEs and editors
+# ---------------------------
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# ---------------------------
+# OS files
+# ---------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---------------------------
+# Data / Large files
+# ---------------------------
+# Keep DVC metadata files (*.dvc) tracked in Git, but ignore large raw data files (parquet, csv, etc.)
+# Example observed raw data: feast_repo/crypto_features/feature_repo/data/crypto_prices.parquet
+feast_repo/crypto_features/feature_repo/data/*.parquet
+feast_repo/crypto_features/feature_repo/data/*.csv
+*.parquet
+*.csv
+
+# If you use DVC, don't ignore .dvc files (they describe tracked data):
+!*.dvc
+
+# ---------------------------
+# Secrets
+# ---------------------------
+.env
+.env.*
+secrets.yml
+credentials.json
+
+# ---------------------------
+# Misc (editor swap/backup, temporary)
+# ---------------------------
+*~
+~$*
+*.swp
+*.tmp
+
+# ---------------------------
+# Kubernetes / Helm / generated manifests (optional)
+# Uncomment if you generate local manifests you don't want to commit
+# ---------------------------
+# *.yaml.generated
+
+# End of .gitignore

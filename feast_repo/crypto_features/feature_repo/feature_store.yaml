@@ -1,0 +1,19 @@
+project: crypto_features
+registry: data/registry.db
+provider: local
+
+offline_store:
+    type: postgres
+    # host: postgres-service.infra.svc.cluster.local
+    host: localhost
+    port: 5432
+    database: feast_offline
+    db_schema: public
+    user: mlops
+    password: mlops123
+
+online_store:
+    type: redis
+    # connection_string: "redis://redis-master.infra.svc.cluster.local:6379"
+    connection_string: "localhost:6379"
+

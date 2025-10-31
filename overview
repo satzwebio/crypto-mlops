@@ -1,0 +1,46 @@
+WebSocket → Kafka (micro-batch 60s) → MinIO raw parquet → Feast offline → Feast online
+   ↓
+Kubeflow pipeline (train + evaluate) → MLflow logs → DVC versioned model
+   ↓
+Manual approval → BentoML Docker build → KServe deployment
+   ↓
+Streamlit dashboard → View predictions + drift + performance metrics
+   ↓
+Evidently drift check triggers next retrain
+
+
+Project Purpose:
+
+Build an end-to-end real-time crypto prediction pipeline with features stored in Feast, models trained in Kubeflow, and predictions served via KServe, monitored with Streamlit and Evidently.
+
+Done so far:
+
+Data Storage & Feature Management:
+
+MinIO set up for raw Parquet storage.
+
+Feast offline store (Postgres) ingests Parquet and computes features.
+
+Feast online store (Redis) holds the latest feature values.
+
+Model Tracking:
+
+MLflow is running locally to track model experiments.
+
+Pending:
+
+Data Ingestion:
+
+Real-time WebSocket → Kafka ingestion.
+
+Model Training & Deployment:
+
+Kubeflow pipeline to train/evaluate models.
+
+Manual approval → BentoML → Docker → KServe deployment.
+
+Monitoring & Dashboarding:
+
+Streamlit dashboard for predictions & metrics.
+
+Evidently to monitor drift and trigger retraining.
