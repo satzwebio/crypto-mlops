@@ -7,6 +7,11 @@ kubectl port-forward svc/mlflow-service 5000:5000 -n infra &
 kubectl port-forward -n infra svc/redis-master 6379:6379 &
 kubectl port-forward svc/postgres-service 5432:5432 -n infra &
 
+kubectl port-forward svc/my-cluster-kafka-bootstrap -n infra 9092:9092 &
+
+
+
+
 
 kubectl apply -f minio-deployment.yaml
 
@@ -444,4 +449,79 @@ kubectl run kafka-consumer -ti --image=quay.io/strimzi/kafka:latest-kafka-4.0.0 
 
 You should see your messages printed back
 
+
+[WebSocket feed]
+       ↓
+ [Kafka producer container]
+       ↓
+  Kafka topic: crypto-prices
+       ↓
+ [Kafka consumer → MinIO parquet]
+
+Python WebSocket → Kafka producer code
+
+Run the script
+python websocket_kafka_producer.py
+
+1️⃣ What we did in the Kafka setup
+
+Created a Kafka cluster with Strimzi in Kubernetes (my-cluster)
+
+Single broker, ephemeral storage (dev/testing).
+
+Added external NodePort listener to allow your local machine to connect.
+
+Port-forwarded the Kafka external listener to localhost
+
+kubectl port-forward svc/my-cluster-kafka-external-bootstrap -n infra 9094:9094
+
+
+This allows your Python script running on your desktop to connect to the in-cluster Kafka as if it’s local.
+
+Workaround for advertised listeners
+
+Kafka brokers advertise their internal IPs by default (172.18.x.x) to clients.
+
+Your producer couldn’t reach the broker because it tried the internal cluster IP from your local machine.
+
+Fix: updated the Kafka listener config in Strimzi to advertise localhost:9094.
+
+This ensures all connections from your local script stay on localhost.
+
+2️⃣ What we achieved
+
+✅ Python script connects to Binance WebSocket.
+
+✅ Messages are sent to Kafka topic crypto-prices.
+
+✅ No more Failed to resolve host errors.
+
+3️⃣ Production considerations
+
+Do not use ephemeral storage → use persistent volumes (PVCs).
+
+Do not use NodePort for external clients → use LoadBalancer, Ingress, or a Kafka REST Proxy.
+
+Security: enable TLS + SASL for authentication between producers/consumers and Kafka.
+
+High availability: run multiple brokers & Zookeeper/NodePools for redundancy.
+
+Monitoring: integrate Kafka metrics (Prometheus + Grafana).
+
+4️⃣ How to consume these messages in a test pod
+
+You can create a temporary Kafka consumer pod in the same namespace:
+
+kubectl run kafka-test-consumer -n infra -it --rm --image=strimzi/kafka:0.46.0-kafka-4.0.0 --restart=Never -- \
+  kafka-console-consumer.sh \
+  --bootstrap-server my-cluster-kafka-bootstrap:9092 \
+  --topic crypto-prices \
+  --from-beginning
+
+
+The pod will attach to your cluster Kafka.
+
+You’ll see all messages your Python producer sent.
+
+Good for testing / debugging before moving to your MinIO consumer.
 
