@@ -67,29 +67,3 @@ spec:
   selector:
     app: minio
 ---
-
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: minio-ingress
-  namespace: infra
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
-spec:
-  rules:
-    - http:
-        paths:
-          - path: /ui
-            pathType: Prefix
-            backend:
-              service:
-                name: minio-service
-                port:
-                  number: 9001
-          - path: /api
-            pathType: Prefix
-            backend:
-              service:
-                name: minio-service
-                port:
-                  number: 9000
