@@ -77,7 +77,7 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-    - host: minio.local
+    - host: "*"
       http:
         paths:
           - path: /ui
