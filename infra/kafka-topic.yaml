@@ -1,0 +1,10 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: crypto-prices
+  labels:
+    strimzi.io/cluster: my-cluster
+  namespace: infra
+spec:
+  partitions: 3
+  replicas: 1

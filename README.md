@@ -3,9 +3,12 @@ kubectl port-forward svc/minio-service 9001:9001 -n infra &
 # Api
 kubectl port-forward svc/minio-service 9000:9000 -n infra &
 
+# postgres
+kubectl port-forward svc/postgres-service 5432:5432 -n infra &
+
 kubectl port-forward svc/mlflow-service 5000:5000 -n infra &
 kubectl port-forward -n infra svc/redis-master 6379:6379 &
-kubectl port-forward svc/postgres-service 5432:5432 -n infra &
+
 
 kubectl port-forward svc/my-cluster-kafka-bootstrap -n infra 9092:9092 &
 
@@ -33,7 +36,6 @@ dvc-storage
 
 ------------
 kubectl apply -f infra/postgres-deployment.yaml
-
 kubectl get pods -n infra
 
 ------------------
@@ -59,7 +61,7 @@ MLflow and Feast both use SQLAlchemy/Postgres clients — they won’t conflict 
 
 kubectl get pods -n infra | grep postgres
 
-kubectl exec -it postgres-6675498649-dkq4m -n infra -- psql -U mlops -d mlopsdb
+kubectl exec -it postgres-84ffcd4b46-kwbvv -n infra -- psql -U mlops -d mlopsdb
 
 Step 2: Create a new database for Feast
 CREATE DATABASE feastdb;
@@ -94,6 +96,8 @@ In your setup:
 | **Feature repo**  | Your Python/Feast definitions and registry | Local folder (in Git + versioned via DVC) |
 
 
+Local Development
+
 python -m venv venv
 source venv/Scripts/activate      # On Windows Git Bash
 # or for PowerShell:
@@ -108,55 +112,9 @@ cd feast_repo
 
 feast init crypto_features
 
-Created another db
-
-CREATE DATABASE feast_offline;
-GRANT ALL PRIVILEGES ON DATABASE feast_offline TO mlops;
-
-Make sure feature_store.yaml is updated..
-
 -------------
 
 Define the Feast Entity and Feature view in example_repo.py
-
-<!-- from datetime import timedelta
-from feast import Entity, Feature, FeatureView, Field, FileSource, PushSource
-from feast.types import Float32, String, Int64
-from feast.infra.offline_stores.file_source import FileSource
-import pandas as pd
-from feast import FeatureStore
-from feast.data_source import RequestSource
-
-# Define the entity — each crypto pair is one entity
-crypto_entity = Entity(
-    name="symbol",
-    join_keys=["symbol"],
-    description="Cryptocurrency trading symbol (e.g., BTCUSDT)"
-)
-
-# Define data source — this will later be replaced with Kafka ingestion / batch microfeeds
-file_source = FileSource(
-    path="data/crypto_prices.parquet",
-    timestamp_field="event_timestamp",
-    created_timestamp_column="created",
-)
-
-# Define the feature view — historical and online features for model training & serving
-crypto_features = FeatureView(
-    name="crypto_features",
-    entities=["symbol"],
-    ttl=timedelta(days=7),
-    schema=[
-        Field(name="price", dtype=Float32),
-        Field(name="volume", dtype=Float32),
-        Field(name="price_ma_5", dtype=Float32),
-        Field(name="price_ma_10", dtype=Float32),
-        Field(name="price_volatility", dtype=Float32),
-    ],
-    online=True,
-    source=file_source,
-    tags={"team": "mlops"},
-) -->
 
 Step 2 — Create Example Data (for initial testing)
 
@@ -212,6 +170,8 @@ feast apply
 % Where offline/online stores are
 % How to materialize and serve features later
 
+# Under Feast_offline DB, create a table crypto_process
+# Refer infra notes for how to exec in to psql client pod
 
 CREATE TABLE crypto_proces (
     symbol TEXT,
@@ -281,30 +241,17 @@ feast materialize-incremental $(date +%Y-%m-%dT%H:%M:%S)
 
 # Check feast read your latest features from Redis(Online Store)
 
-Run below in `python`
-
-from feast import FeatureStore
-
-# Initialize store (path where your feature_store.yaml is)
-store = FeatureStore(repo_path=".")
-
-# Fetch features for a specific symbol (example: BTCUSDT)
-feature_vector = store.get_online_features(
-    features=[
-        "crypto_features:price",
-        "crypto_features:volume",
-    ],
-    entity_rows=[{"symbol": "BTCUSDT"}],
-).to_dict()
-
-print(feature_vector)
-
+Run feast_read_test in python `python`
+cd feast_repo/crypto_features/feature_repo/
+python ./feast_read_test.py
 
 
 Why Feast?
 
 Feast ensures that features in the online store are consistent, transformed, and incrementally updated from the offline store. It handles point-in-time correctness, feature versioning, and reproducibility, which a simple cron job cannot.
 This makes real-time model serving reliable without custom pipelines for feature computation or updates.
+
+------------------------
 
 Model Training + DVC Setup
 
@@ -326,7 +273,7 @@ dvc init
 git add .dvc .dvcignore
 git commit -m "Initialize DVC for data and model versioning"
 
-# Create user in minio
+# Create user in minio  # this is not required
 # Create access amd secret key for the user in minio - 
     i4uQb2rjeKHPNRILXU4u
     15woTgEJswI9yaVRsygK9gQ1V6UJdYUGZGrSwVK0
@@ -334,8 +281,8 @@ git commit -m "Initialize DVC for data and model versioning"
 dvc remote add -d minio s3://dvc-storage
 
 dvc remote modify minio endpointurl http://localhost:9000   # 9000 is the API port, 9001 is the console
-dvc remote modify minio access_key_id i4uQb2rjeKHPNRILXU4u
-dvc remote modify minio secret_access_key 15woTgEJswI9yaVRsygK9gQ1V6UJdYUGZGrSwVK0
+<!-- dvc remote modify minio access_key_id i4uQb2rjeKHPNRILXU4u
+dvc remote modify minio secret_access_key 15woTgEJswI9yaVRsygK9gQ1V6UJdYUGZGrSwVK0 -->
 dvc remote modify minio use_ssl false
 
 dvc remote list
@@ -362,8 +309,9 @@ $ export AWS_SECRET_ACCESS_KEY="minioadmin123"
 pip install mlflow
 
 # Check MLFlow connection by running this python snippet
+python ./localhost-mlflow.py 
 
-import mlflow, tempfile, os
+<!-- import mlflow, tempfile, os
 
 mlflow.set_experiment("local-test")
 
@@ -374,7 +322,7 @@ with mlflow.start_run():
         f.write("Test artifact from local MLflow client")
         temp_path = f.name
     mlflow.log_artifact(temp_path)
-    print("✅ Logged successfully to MLflow + MinIO")
+    print("✅ Logged successfully to MLflow + MinIO") -->
 
 
 # Now you will see an experiment in mlflow UI also under minio
@@ -406,6 +354,8 @@ mlopsdb=# SELECT run_uuid, experiment_id, status, lifecycle_stage FROM runs LIMI
 
 mlopsdb=#
 
+---------------------
+
 # Install Kafka Strimzi
 
 # Apply Strimzi cluster operator (uses CRDs)
@@ -418,18 +368,7 @@ kubectl apply -f infra/kafka-nodepool.yaml
 kubectl get pods -n infra -l strimzi.io/cluster=my-cluster
 
 create a topic named crypto-prices, which will hold real-time price messages coming from the WebSocket.
-kubectl apply -f - <<EOF
-apiVersion: kafka.strimzi.io/v1beta2
-kind: KafkaTopic
-metadata:
-  name: crypto-prices
-  labels:
-    strimzi.io/cluster: my-cluster
-  namespace: infra
-spec:
-  partitions: 3
-  replicas: 1
-EOF
+kubectl apply -f infra/kafka-topic.yaml
 
 
 A Kafka Topic is like a streaming channel — where data is continuously published and consumed.
