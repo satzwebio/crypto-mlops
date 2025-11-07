@@ -5,7 +5,7 @@ from confluent_kafka import Producer
 
 # ✅ 1. Kafka Configuration
 # Use localhost since you're port-forwarding from your local machine
-KAFKA_BROKER = "localhost:9094"
+KAFKA_BROKER = "localhost:9092"
 TOPIC = "crypto-prices"
 
 # ✅ 2. Binance WebSocket Endpoint

@@ -14,7 +14,7 @@ spec:
         tls: false
       - name: external
         port: 9094
-        type: internal
+        type: nodeport
         tls: false
         configuration:
           brokers:
