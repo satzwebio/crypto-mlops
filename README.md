@@ -363,11 +363,11 @@ kubectl apply -f https://strimzi.io/install/latest?namespace=infra -n infra
 
 kubectl apply -f infra/kafka-cluster-kraft.yaml
 
-This defines how many brokers (Kafka nodes) to run
+# This defines how many brokers (Kafka nodes) to run
 kubectl apply -f infra/kafka-nodepool.yaml
 kubectl get pods -n infra -l strimzi.io/cluster=my-cluster
 
-create a topic named crypto-prices, which will hold real-time price messages coming from the WebSocket.
+# create a topic named crypto-prices, which will hold real-time price messages coming from the WebSocket.
 kubectl apply -f infra/kafka-topic.yaml
 
 
