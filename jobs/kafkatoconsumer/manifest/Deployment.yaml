@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crypto-kafka-consumer
+  namespace: crypto
+  labels:
+    app: crypto-kafka-consumer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: crypto-kafka-consumer
+  template:
+    metadata:
+      labels:
+        app: crypto-kafka-consumer
+    spec:
+      containers:
+        - name: crypto-kafka-consumer
+          image: YOUR_DOCKER_REPO/crypto-kafka-consumer:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              value: "kafka-kafka-bootstrap.infra.svc.cluster.local:9092"
+            - name: KAFKA_TOPIC
+              value: "crypto-prices"
+            - name: KAFKA_CONSUMER_GROUP
+              value: "crypto-minio-consumer"
+            - name: KAFKA_AUTO_OFFSET_RESET
+              value: "latest"
+            - name: KAFKA_POLL_TIMEOUT
+              value: "1.0"
+
+            - name: MINIO_ENDPOINT
+              value: "http://minio.infra.svc.cluster.local:9000"
+            - name: MINIO_BUCKET
+              value: "feast-feature-store"
+            - name: MINIO_PREFIX
+              value: "raw"
+
+            - name: BATCH_MAX_SECONDS
+              value: "60"
+            - name: BATCH_MAX_MESSAGES
+              value: "5000"
+
+          envFrom:
+            - secretRef:
+                name: minio-credentials
+
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+
+          # Graceful shutdown to flush final batch
+          lifecycle:
+            preStop:
+              exec:
+                command: ["sh", "-c", "sleep 10"]
+
+      restartPolicy: Always

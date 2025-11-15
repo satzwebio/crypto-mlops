@@ -1,0 +1,128 @@
+🧭 Project Overview
+
+Goal:
+Build a fully automated real-time crypto prediction MLOps pipeline using open-source tools on Kubernetes.
+The flow:
+
+WebSocket → Kafka (micro-batch 60s) → MinIO (raw parquet) → Feast (offline + online) → Kubeflow (train/eval) → MLflow (track) → DVC (version) → BentoML/KServe (serve) → Streamlit/Evidently (monitor)
+
+✅ Completed So Far
+🏗️ Infrastructure Layer (infra namespace)
+
+MinIO – acts as the centralized S3-compatible storage for:
+
+Raw crypto parquet data.
+
+MLflow artifacts.
+
+DVC remote storage.
+
+PostgreSQL – backend for Feast (offline store) and MLflow tracking DB.
+
+Redis – Feast online store for serving the most recent feature vectors.
+
+MLflow – deployed and connected with MinIO and PostgreSQL.
+
+Kafka (Strimzi) – deployed as a cluster with:
+
+Internal (9092) and external (9094) listeners.
+
+Configured NodePort and port-forwarding for external access.
+
+Working topic: crypto-prices.
+
+⚙️ Feature Layer (feast_repo)
+
+Feast repository configured with:
+
+feature_store.yaml pointing to PostgreSQL (offline) and Redis (online).
+
+Features defined for crypto prices (BTC/ETH).
+
+Successfully materialized features into Redis.
+
+Tested feature retrieval with Python.
+
+📦 Data Management
+
+DVC initialized and connected to MinIO (dvc-storage bucket).
+
+Parquet data versioned and pushed successfully.
+
+Verified artifacts and data appear in MinIO.
+
+🔄 Data Streaming
+
+Binance WebSocket producer (websocket_kafka_producer.py) working.
+
+Successfully produces live BTCUSDT price updates to Kafka topic crypto-prices.
+
+Verified Kafka consumer inside cluster receives messages.
+
+Producer now containerized and ready for deployment in Kubernetes.
+
+🧩 Current Architecture
+
+Namespaces
+
+infra: for core services (Kafka, Redis, PostgreSQL, MinIO, MLflow).
+
+crypto: for project workloads (producer, consumer, training, model serving).
+
+Kafka communication
+
+External access via NodePort 9094.
+
+Local → EC2 tunneling set up for testing.
+
+Producer sends data → Kafka topic → consumer will persist to MinIO.
+
+🚀 Next Steps
+🧱 Phase 4: Data Pipeline (Kafka → MinIO)
+
+Goal: Consume from Kafka and store as parquet batches in MinIO.
+
+Create kafka_consumer_to_minio.py (uses boto3 + confluent_kafka + pandas).
+
+Run as a Kubernetes CronJob or Deployment in crypto namespace.
+
+Output: raw files in minio://feast-feature-store/raw/YYYYMMDD/.
+
+🧠 Phase 5: Model Training (Kubeflow + MLflow + DVC)
+
+Goal: Automate training and versioning.
+
+Kubeflow pipeline reads parquet from MinIO.
+
+Train models and log metrics/artifacts to MLflow.
+
+DVC tracks model versions.
+
+🧰 Phase 6: Model Deployment (BentoML + KServe)
+
+Goal: Serve latest approved model.
+
+Package trained model with BentoML.
+
+Deploy inference service on KServe.
+
+Online feature store (Redis) supplies latest data.
+
+📊 Phase 7: Monitoring (Streamlit + Evidently)
+
+Goal: Live dashboard and drift detection.
+
+Streamlit displays predictions, metrics, and drift charts.
+
+Evidently monitors data drift → triggers retrain workflow in Kubeflow.
+
+🔍 Next Immediate Action
+
+We are currently at the “Kafka → MinIO” ingestion step.
+Next, we’ll:
+
+Write the consumer script.
+
+Containerize and deploy it to the crypto namespace.
+
+Verify parquet files landing in MinIO.

@@ -13,7 +13,8 @@ kubectl port-forward -n infra svc/redis-master 6379:6379 &
 kubectl port-forward svc/my-cluster-kafka-bootstrap -n infra 9092:9092 &
 
 
-
+kubectl create ns infra
+kubectl create ns crypto
 
 
 kubectl apply -f minio-deployment.yaml
@@ -432,23 +433,22 @@ Monitoring: integrate Kafka metrics (Prometheus + Grafana).
 4️⃣ How to consume these messages in a test pod
 You can create a temporary Kafka consumer pod in the same namespace:
 
-kubectl run kafka-test-consumer -n infra -it --rm --image=strimzi/kafka:0.46.0-kafka-4.0.0 --restart=Never -- \
-  kafka-console-consumer.sh \
-  --bootstrap-server my-cluster-kafka-bootstrap:9092 \
-  --topic crypto-prices \
-  --from-beginning
-
-
 kubectl run kafka-consumer -n infra -it --rm \
-  --image=strimzi/kafka:0.46.0-kafka-4.0.0 --restart=Never -- \
-  kafka-console-consumer.sh \
+  --image=quay.io/strimzi/kafka:0.46.0-kafka-4.0.0 --restart=Never -- \
+  /opt/kafka/bin/kafka-console-consumer.sh \
   --bootstrap-server my-cluster-kafka-bootstrap:9092 \
   --topic crypto-prices \
   --from-beginning
 
-Time being we can check on
-python websocket_kafka_consumer.py 
 
+That’s why your SSH tunnel (9094) from your laptop → EC2 made it work:
+  Laptop connects to localhost:9094
+  Tunnel forwards to EC2:9094
+  EC2 forwards via NodePort to the Kafka broker pod.
+
+
+# optional Time being we can check on
+python websocket_kafka_consumer.py 
 The pod will attach to your cluster Kafka.
 You’ll see all messages your Python producer sent.
 Good for testing / debugging before moving to your MinIO consumer.
