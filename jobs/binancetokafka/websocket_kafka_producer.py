@@ -11,7 +11,7 @@ TOPIC = os.getenv("TOPIC")
 # commented out for now, since deployment has env vars set
 
 # ✅ 2. Binance WebSocket Endpoint
-BINANCE_STREAM = "wss://stream.binance.us:9443/ws/btcusdt@trade"
+BINANCE_STREAM = "wss://fstream.binance.com/ws/btcusdt@trade"
 
 # ✅ 3. Kafka Producer Setup
 producer_conf = {

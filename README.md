@@ -389,6 +389,12 @@ kubectl run kafka-consumer -ti --image=quay.io/strimzi/kafka:latest-kafka-4.0.0 
 
 You should see your messages printed back
 
+{"symbol": "BTCUSDT", "price": 96068.2, "timestamp": 1763273522682}
+{"symbol": "BTCUSDT", "price": 96068.2, "timestamp": 1763273529144}
+{"symbol": "BTCUSDT", "price": 96070.0, "timestamp": 1763273600323}
+{"symbol": "BTCUSDT", "price": 96069.95, "timestamp": 1763273615258}
+{"symbol": "BTCUSDT", "price": 96069.88, "timestamp": 1763273811704}
+
 
 [WebSocket feed]
        ↓

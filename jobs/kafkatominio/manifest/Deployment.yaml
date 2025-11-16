@@ -25,7 +25,7 @@ spec:
             - name: KAFKA_TOPIC
               value: "crypto-prices"
             - name: KAFKA_CONSUMER_GROUP
-              value: "crypto-minio-consumer"
+              value: "crypto-minio-consumer-v2"
             - name: KAFKA_AUTO_OFFSET_RESET
               value: "latest"
             - name: KAFKA_POLL_TIMEOUT
