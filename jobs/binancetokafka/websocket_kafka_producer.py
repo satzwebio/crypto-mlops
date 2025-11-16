@@ -1,12 +1,14 @@
 import asyncio
 import json
 import websockets
+import os
 from confluent_kafka import Producer
 
 # ✅ 1. Kafka Configuration
 # Use localhost since you're port-forwarding from your local machine
-KAFKA_BROKER = "localhost:9094"
-TOPIC = "crypto-prices"
+KAFKA_BROKER = os.getenv("KAFKA_BROKER")   # "localhost:9094"
+TOPIC = os.getenv("TOPIC")
+# commented out for now, since deployment has env vars set
 
 # ✅ 2. Binance WebSocket Endpoint
 BINANCE_STREAM = "wss://stream.binance.us:9443/ws/btcusdt@trade"

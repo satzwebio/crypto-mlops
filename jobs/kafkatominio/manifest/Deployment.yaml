@@ -32,7 +32,7 @@ spec:
               value: "1.0"
 
             - name: MINIO_ENDPOINT
-              value: "http://minio.infra.svc.cluster.local:9000"
+              value: "http://minio-service.infra.svc.cluster.local:9000"
             - name: MINIO_BUCKET
               value: "feast-feature-store"
             - name: MINIO_PREFIX
