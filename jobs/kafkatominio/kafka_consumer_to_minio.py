@@ -5,6 +5,7 @@ import sys
 import time
 from datetime import datetime, timezone
 from io import BytesIO
+from confluent_kafka import Consumer, TopicPartition
 
 import boto3
 import pandas as pd
@@ -30,10 +31,19 @@ def create_kafka_consumer():
         "auto.offset.reset": os.getenv("KAFKA_AUTO_OFFSET_RESET", "earliest"),
         "enable.auto.commit": False,
     }
+
     consumer = Consumer(config)
+
     topic = os.getenv("KAFKA_TOPIC", "crypto-prices")
-    consumer.subscribe([topic])
-    print(f"Subscribed to topic: {topic}")
+
+    # Force fixed partition assignment
+    partition = int(os.getenv("KAFKA_PARTITION", "0"))
+    tp = TopicPartition(topic, partition, 0)   # start at offset 0 for safety
+
+    consumer.assign([tp])
+
+    print(f"🔥 Assigned to topic={topic}, partition={partition}")
+
     return consumer
 
 
@@ -152,6 +162,7 @@ def main():
             now = time.time()
 
             if msg is None:
+                print("NO MESSAGE FROM KAFKA")
                 if records and (now - batch_start_ts >= batch_max_seconds):
                     try:
                         buffer_to_parquet_s3(s3_client, records, batch_start_ts)
@@ -165,6 +176,7 @@ def main():
                 continue
 
             if msg.error():
+                print("🔥 RECEIVED RAW:", msg.value())
                 if msg.error().code() == KafkaError._PARTITION_EOF:
                     continue
                 else:

@@ -42,6 +42,8 @@ spec:
               value: "60"
             - name: BATCH_MAX_MESSAGES
               value: "5000"
+            - name: KAFKA_PARTITION
+              value: "0"              
 
           envFrom:
             - secretRef:
