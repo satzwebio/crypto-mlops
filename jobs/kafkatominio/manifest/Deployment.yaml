@@ -27,7 +27,7 @@ spec:
             - name: KAFKA_CONSUMER_GROUP
               value: "crypto-minio-consumer-v2"
             - name: KAFKA_AUTO_OFFSET_RESET
-              value: "latest"
+              value: "earliest"
             - name: KAFKA_POLL_TIMEOUT
               value: "1.0"
 
