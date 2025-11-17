@@ -21,7 +21,7 @@ spec:
               # 1️⃣ THIS IS CRITICAL → SET WORKING DIR TO YOUR FEAST REPO ROOT
               workingDir: /app/feast_repo/crypto_features/feature_repo
 
-              command: ["/bin/bash", "-c", "./jobs/run_materialization.sh"]
+              command: ["/bin/sh", "-c", "./jobs/run_materialization.sh"]
 
               env:
                 # --- Feast Offline Store (Postgres) ---
