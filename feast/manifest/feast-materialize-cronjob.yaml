@@ -6,8 +6,8 @@ metadata:
 spec:
   # Run every 5 minutes for testing
   schedule: "*/1 * * * *"
-  successfulJobsHistoryLimit: 2
-  failedJobsHistoryLimit: 2
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
   jobTemplate:
     spec:
       template:
