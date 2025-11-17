@@ -1,5 +1,0 @@
-outs:
-- md5: 8f296f0981d302e1b9295619de94b208
-  size: 16480
-  hash: md5
-  path: crypto_prices.parquet
