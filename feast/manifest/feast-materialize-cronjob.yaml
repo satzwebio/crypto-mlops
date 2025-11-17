@@ -4,7 +4,6 @@ metadata:
   name: feast-materialize-crypto
   namespace: crypto
 spec:
-  # Run every 5 minutes for testing
   schedule: "*/1 * * * *"
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 3
@@ -16,16 +15,16 @@ spec:
           restartPolicy: Never
           containers:
             - name: feast-materialize
-              image: satzweb/feast-runner:latest   # you built earlier
+              image: satzweb/feast-runner:latest
               imagePullPolicy: Always
 
-              # 1️⃣ THIS IS CRITICAL → SET WORKING DIR TO YOUR FEAST REPO ROOT
               workingDir: /app/feast_repo/crypto_features/feature_repo
 
               command: ["/bin/sh", "-c", "sh ./jobs/run_materialization.sh"]
 
               env:
-                # --- Feast Offline Store (Postgres) ---
+
+                # --- Postgres ---
                 - name: PGHOST
                   value: "postgres.infra.svc.cluster.local"
                 - name: PGPORT
@@ -43,15 +42,31 @@ spec:
                 - name: PGDATABASE
                   value: "feast"
 
-                # --- Redis Online Store ---
+                # --- Redis ---
                 - name: REDIS_HOST
                   value: "redis-master.infra.svc.cluster.local"
                 - name: REDIS_PORT
                   value: "6379"
 
-                # Optional safety (recommended)
-                - name: FEAST_USAGE
-                  value: "local"
+                # --- MINIO OFFLINE STORE ACCESS ---
+                - name: AWS_ACCESS_KEY_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: minio-credentials
+                      key: MINIO_ACCESS_KEY
+                - name: AWS_SECRET_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: minio-credentials
+                      key: MINIO_SECRET_KEY
+                - name: FEAST_S3_ENDPOINT_URL
+                  value: "http://minio-service.infra.svc.cluster.local:9000"
+
+                # Recommended
+                - name: AWS_REGION
+                  value: "us-east-1"
+                - name: AWS_S3_ALLOW_UNSAFE_RENAME
+                  value: "true"
 
               resources:
                 requests:

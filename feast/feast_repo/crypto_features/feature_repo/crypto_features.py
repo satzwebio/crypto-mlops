@@ -4,7 +4,7 @@ from feast.data_format import ParquetFormat
 
 crypto_source = FileSource(
     name="crypto_source",
-    path="s3://feast-feature-store/raw/{date}/*.parquet",
+    path="s3://feast-feature-store/raw/*/*.parquet",
     timestamp_field="event_timestamp",
     file_format=ParquetFormat(),
 )
