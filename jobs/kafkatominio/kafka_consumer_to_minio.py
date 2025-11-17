@@ -26,8 +26,8 @@ signal.signal(signal.SIGTERM, handle_signals)
 
 def create_kafka_consumer():
     config = {
-        "bootstrap.servers": os.getenv("KAFKA_BOOTSTRAP_SERVERS", "kafka:9092"),
-        "group.id": os.getenv("KAFKA_CONSUMER_GROUP", "crypto-minio-consumer"),
+        "bootstrap.servers": os.getenv("KAFKA_BOOTSTRAP_SERVERS"),
+        "group.id": os.getenv("KAFKA_CONSUMER_GROUP"),
         "auto.offset.reset": os.getenv("KAFKA_AUTO_OFFSET_RESET", "earliest"),
         "enable.auto.commit": False,
     }
@@ -35,14 +35,13 @@ def create_kafka_consumer():
     consumer = Consumer(config)
 
     topic = os.getenv("KAFKA_TOPIC", "crypto-prices")
-
-    # Force fixed partition assignment
     partition = int(os.getenv("KAFKA_PARTITION", "0"))
-    tp = TopicPartition(topic, partition, 0)   # start at offset 0 for safety
+
+    tp = TopicPartition(topic, partition, 0)
 
     consumer.assign([tp])
 
-    print(f"🔥 Assigned to topic={topic}, partition={partition}")
+    print(f"🔥 Assigned to {topic} partition {partition}")
 
     return consumer
 

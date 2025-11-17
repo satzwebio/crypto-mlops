@@ -9,8 +9,8 @@ This service streams live crypto prices from Binance WebSocket to Kafka topic `c
 ```bash
 Create repo first in docker hub
 
-docker build -t satzweb/websocket-producer:latest .
-docker push satzweb/websocket-producer:latest
+docker build -t satzweb/websocket-producer:11062025 .
+docker push satzweb/websocket-producer:11062025
 ```
 
 2️⃣ Deploy to Kubernetes
