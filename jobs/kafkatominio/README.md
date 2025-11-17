@@ -1,2 +1,2 @@
-docker build -t satzweb/kafkatominio:latest .
-docker push satzweb/kafkatominio:latest
+docker build -t satzweb/kafkatominio:11062025 .
+docker push satzweb/kafkatominio:11062025

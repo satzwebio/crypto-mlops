@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: crypto-kafka-consumer
-          image: satzweb/kafkatominio:latest
+          image: satzweb/kafkatominio:11062025
           imagePullPolicy: IfNotPresent
           env:
             - name: KAFKA_BOOTSTRAP_SERVERS
