@@ -10,6 +10,7 @@ spec:
   failedJobsHistoryLimit: 3
   jobTemplate:
     spec:
+      ttlSecondsAfterFinished: 600
       template:
         spec:
           restartPolicy: Never
@@ -21,7 +22,7 @@ spec:
               # 1️⃣ THIS IS CRITICAL → SET WORKING DIR TO YOUR FEAST REPO ROOT
               workingDir: /app/feast_repo/crypto_features/feature_repo
 
-              command: ["/bin/sh", "-c", "./jobs/run_materialization.sh"]
+              command: ["/bin/sh", "-c", "sh ./jobs/run_materialization.sh"]
 
               env:
                 # --- Feast Offline Store (Postgres) ---
