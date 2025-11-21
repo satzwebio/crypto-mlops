@@ -72,6 +72,9 @@ spec:
                 - name: AWS_S3_ALLOW_UNSAFE_RENAME
                   value: "true"
 
+                - name: AWS_S3_ALLOW_UNSIGNED_PAYLOAD
+                  value: "true                  
+
               resources:
                 requests:
                   cpu: "100m"
