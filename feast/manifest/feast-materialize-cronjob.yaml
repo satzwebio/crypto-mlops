@@ -26,7 +26,7 @@ spec:
 
                 # --- Postgres ---
                 - name: PGHOST
-                  value: "postgres.infra.svc.cluster.local"
+                  value: "postgres-service.infra.svc.cluster.local"
                 - name: PGPORT
                   value: "5432"
                 - name: PGUSER
@@ -40,7 +40,7 @@ spec:
                       name: postgres-credentials
                       key: password
                 - name: PGDATABASE
-                  value: "feast"
+                  value: "feast_offline"
 
                 # --- Redis ---
                 - name: REDIS_HOST
@@ -59,12 +59,16 @@ spec:
                     secretKeyRef:
                       name: minio-credentials
                       key: MINIO_SECRET_KEY
+                - name: AWS_REGION
+                  value: "us-east-1"
+
+                - name: AWS_ENDPOINT_URL
+                  value: "http://minio-service.infra.svc.cluster.local:9000"
+
                 - name: FEAST_S3_ENDPOINT_URL
                   value: "http://minio-service.infra.svc.cluster.local:9000"
 
                 # Recommended
-                - name: AWS_REGION
-                  value: "us-east-1"
                 - name: AWS_S3_ALLOW_UNSAFE_RENAME
                   value: "true"
 
