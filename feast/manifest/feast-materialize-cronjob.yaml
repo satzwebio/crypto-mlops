@@ -73,7 +73,7 @@ spec:
                   value: "true"
 
                 - name: AWS_S3_ALLOW_UNSIGNED_PAYLOAD
-                  value: "true                  
+                  value: "true"                  
 
               resources:
                 requests:
