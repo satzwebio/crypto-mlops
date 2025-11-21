@@ -73,7 +73,10 @@ spec:
                   value: "true"
 
                 - name: AWS_S3_ALLOW_UNSIGNED_PAYLOAD
-                  value: "true"                  
+                  value: "true"   
+                - name: AWS_S3_ADDRESSING_STYLE
+                  value: "path"
+
 
               resources:
                 requests:
