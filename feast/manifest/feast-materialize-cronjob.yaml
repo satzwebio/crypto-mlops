@@ -54,11 +54,15 @@ spec:
                     secretKeyRef:
                       name: minio-credentials
                       key: MINIO_ACCESS_KEY
+
+
                 - name: AWS_SECRET_ACCESS_KEY
                   valueFrom:
                     secretKeyRef:
                       name: minio-credentials
                       key: MINIO_SECRET_KEY
+
+
                 - name: AWS_REGION
                   value: "us-east-1"
 
@@ -70,6 +74,11 @@ spec:
 
                 - name: AWS_ENDPOINT_URL_S3
                   value: "http://minio-service.infra.svc.cluster.local:9000"
+
+                - name: S3_USE_HTTPS
+                  value: "0"
+                - name: S3_VERIFY_SSL
+                  value: "0"                  
 
 
                 # Recommended
