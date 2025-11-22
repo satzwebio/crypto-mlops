@@ -62,7 +62,7 @@ spec:
                 - name: AWS_REGION
                   value: "us-east-1"
 
-                - name: AWS_ENDPOINT_URL
+                - name: AWS_S3_ENDPOINT
                   value: "http://minio-service.infra.svc.cluster.local:9000"
 
                 - name: FEAST_S3_ENDPOINT_URL
