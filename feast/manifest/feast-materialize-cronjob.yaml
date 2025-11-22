@@ -49,49 +49,55 @@ spec:
                   value: "6379"
 
                 # --- MINIO OFFLINE STORE ACCESS ---
-                - name: AWS_ACCESS_KEY_ID
-                  valueFrom:
-                    secretKeyRef:
-                      name: minio-credentials
-                      key: MINIO_ACCESS_KEY
+                # - name: AWS_ACCESS_KEY_ID
+                #   valueFrom:
+                #     secretKeyRef:
+                #       name: minio-credentials
+                #       key: MINIO_ACCESS_KEY
 
 
-                - name: AWS_SECRET_ACCESS_KEY
-                  valueFrom:
-                    secretKeyRef:
-                      name: minio-credentials
-                      key: MINIO_SECRET_KEY
+                # - name: AWS_SECRET_ACCESS_KEY
+                #   valueFrom:
+                #     secretKeyRef:
+                #       name: minio-credentials
+                #       key: MINIO_SECRET_KEY
 
 
-                - name: AWS_REGION
-                  value: "us-east-1"
+                # - name: AWS_REGION
+                #   value: "us-east-1"
 
-                - name: AWS_S3_ENDPOINT
-                  value: "http://minio-service.infra.svc.cluster.local:9000"
+                # - name: AWS_S3_ENDPOINT
+                #   value: "http://minio-service.infra.svc.cluster.local:9000"
 
+                # - name: FEAST_S3_ENDPOINT_URL
+                #   value: "http://minio-service.infra.svc.cluster.local:9000"
+
+                # - name: AWS_ENDPOINT_URL_S3
+                #   value: "http://minio-service.infra.svc.cluster.local:9000"
+
+                # - name: S3_USE_HTTPS
+                #   value: "0"
+                # - name: S3_VERIFY_SSL
+                #   value: "0"                  
+
+
+                # # Recommended
+                # - name: AWS_S3_ALLOW_UNSAFE_RENAME
+                #   value: "true"
+
+                # - name: AWS_S3_ALLOW_UNSIGNED_PAYLOAD
+                #   value: "true"   
+                # - name: AWS_S3_ADDRESSING_STYLE
+                #   value: "path"
+
+                # - name: AWS_SIGNATURE_VERSION
+                #   value: "s3v4"
                 - name: FEAST_S3_ENDPOINT_URL
                   value: "http://minio-service.infra.svc.cluster.local:9000"
-
-                - name: AWS_ENDPOINT_URL_S3
-                  value: "http://minio-service.infra.svc.cluster.local:9000"
-
-                - name: S3_USE_HTTPS
-                  value: "0"
-                - name: S3_VERIFY_SSL
-                  value: "0"                  
-
-
-                # Recommended
-                - name: AWS_S3_ALLOW_UNSAFE_RENAME
-                  value: "true"
-
+                - name: AWS_REGION
+                  value: "us-east-1"
                 - name: AWS_S3_ALLOW_UNSIGNED_PAYLOAD
-                  value: "true"   
-                - name: AWS_S3_ADDRESSING_STYLE
-                  value: "path"
-
-                - name: AWS_SIGNATURE_VERSION
-                  value: "s3v4"
+                  value: "true"
 
 
 
