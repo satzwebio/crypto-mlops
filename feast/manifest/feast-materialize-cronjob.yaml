@@ -68,6 +68,10 @@ spec:
                 - name: FEAST_S3_ENDPOINT_URL
                   value: "http://minio-service.infra.svc.cluster.local:9000"
 
+                - name: AWS_ENDPOINT_URL_S3
+                  value: "http://minio-service.infra.svc.cluster.local:9000"
+
+
                 # Recommended
                 - name: AWS_S3_ALLOW_UNSAFE_RENAME
                   value: "true"
@@ -76,6 +80,10 @@ spec:
                   value: "true"   
                 - name: AWS_S3_ADDRESSING_STYLE
                   value: "path"
+
+                - name: AWS_SIGNATURE_VERSION
+                  value: "s3v4"
+
 
 
               resources:
