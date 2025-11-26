@@ -1,6 +1,7 @@
 from feast import FileSource, Entity, Field, FeatureView
 from feast.types import Float64
 from feast.data_format import ParquetFormat
+from feast.value_type import ValueType
 
 crypto_source = FileSource(
     name="crypto_source",
@@ -10,7 +11,11 @@ crypto_source = FileSource(
     s3_endpoint_override="http://minio-service.infra.svc.cluster.local:9000",
 )
 
-crypto_entity = Entity(name="symbol", join_keys=["symbol"])
+crypto_entity = Entity(
+    name="symbol",
+    value_type=ValueType.STRING,
+    join_keys=["symbol"]
+)
 
 crypto_fv = FeatureView(
     name="crypto_prices",
