@@ -15,7 +15,7 @@ spec:
           restartPolicy: Never
           containers:
             - name: feast-materialize
-              image: satzweb/feast-runner:latest1
+              image: satzweb/feast-runner:latest2
               imagePullPolicy: Always
 
               workingDir: /app/feast_repo/crypto_features/feature_repo
@@ -48,19 +48,19 @@ spec:
                 - name: REDIS_PORT
                   value: "6379"
 
-                # --- MINIO OFFLINE STORE ACCESS ---
-                # - name: AWS_ACCESS_KEY_ID
-                #   valueFrom:
-                #     secretKeyRef:
-                #       name: minio-credentials
-                #       key: MINIO_ACCESS_KEY
+                --- MINIO OFFLINE STORE ACCESS ---
+                - name: AWS_ACCESS_KEY_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: minio-credentials
+                      key: MINIO_ACCESS_KEY
 
 
-                # - name: AWS_SECRET_ACCESS_KEY
-                #   valueFrom:
-                #     secretKeyRef:
-                #       name: minio-credentials
-                #       key: MINIO_SECRET_KEY
+                - name: AWS_SECRET_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: minio-credentials
+                      key: MINIO_SECRET_KEY
 
 
                 # - name: AWS_REGION
