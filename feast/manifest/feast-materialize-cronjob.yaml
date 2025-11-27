@@ -15,7 +15,7 @@ spec:
           restartPolicy: Never
           containers:
             - name: feast-materialize
-              image: satzweb/feast-runner:latest3
+              image: satzweb/feast-runner:latest4
               imagePullPolicy: Always
 
               workingDir: /app/feast_repo/crypto_features/feature_repo
