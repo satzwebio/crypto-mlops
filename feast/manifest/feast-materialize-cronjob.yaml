@@ -25,22 +25,22 @@ spec:
               env:
 
                 # --- Postgres ---
-                - name: PGHOST
-                  value: "postgres-service.infra.svc.cluster.local"
-                - name: PGPORT
-                  value: "5432"
-                - name: PGUSER
-                  valueFrom:
-                    secretKeyRef:
-                      name: postgres-credentials
-                      key: username
-                - name: PGPASSWORD
-                  valueFrom:
-                    secretKeyRef:
-                      name: postgres-credentials
-                      key: password
-                - name: PGDATABASE
-                  value: "feast_offline"
+                # - name: PGHOST
+                #   value: "postgres-service.infra.svc.cluster.local"
+                # - name: PGPORT
+                #   value: "5432"
+                # - name: PGUSER
+                #   valueFrom:
+                #     secretKeyRef:
+                #       name: postgres-credentials
+                #       key: username
+                # - name: PGPASSWORD
+                #   valueFrom:
+                #     secretKeyRef:
+                #       name: postgres-credentials
+                #       key: password
+                # - name: PGDATABASE
+                #   value: "feast_offline"
 
                 # --- Redis ---
                 - name: REDIS_HOST
@@ -69,8 +69,8 @@ spec:
                 # - name: AWS_S3_ENDPOINT
                 #   value: "http://minio-service.infra.svc.cluster.local:9000"
 
-                # - name: FEAST_S3_ENDPOINT_URL
-                #   value: "http://minio-service.infra.svc.cluster.local:9000"
+                - name: FEAST_S3_ENDPOINT_URL
+                  value: "http://minio-service.infra.svc.cluster.local:9000"
 
                 # - name: AWS_ENDPOINT_URL_S3
                 #   value: "http://minio-service.infra.svc.cluster.local:9000"
@@ -92,8 +92,8 @@ spec:
 
                 # - name: AWS_SIGNATURE_VERSION
                 #   value: "s3v4"
-                - name: FEAST_S3_ENDPOINT_URL
-                  value: "http://minio-service.infra.svc.cluster.local:9000"
+                # - name: FEAST_S3_ENDPOINT_URL
+                #   value: "http://minio-service.infra.svc.cluster.local:9000"
                 - name: AWS_REGION
                   value: "us-east-1"
                 - name: AWS_S3_ALLOW_UNSIGNED_PAYLOAD

@@ -3,14 +3,15 @@ registry: data/registry.db
 provider: local
 
 offline_store:
-    type: postgres
-    host: postgres-service.infra.svc.cluster.local
-    # host: localhost
-    port: 5432
-    database: feast_offline
-    db_schema: public
-    user: mlops
-    password: mlops123
+    # type: postgres
+    # host: postgres-service.infra.svc.cluster.local
+    # # host: localhost
+    # port: 5432
+    # database: feast_offline
+    # db_schema: public
+    # user: mlops
+    # password: mlops123
+    type: file
 
 online_store:
     type: redis
