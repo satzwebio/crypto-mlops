@@ -111,15 +111,15 @@ Because this is designed to be ephemeral, you can remove the whole environment w
 kind delete cluster --name mlops-cluster
 ```
 
-## Why this is valuable for employers
+## Why this is useful for beginners
 
-This project is strong for professional portfolios because it shows that you can think beyond a single notebook or script. It demonstrates:
+This project is a great way to learn by building something real. It helps beginners see how different pieces of an ML platform come together in practice:
 
-- cloud-native deployment skills
-- infrastructure as code mindset
+- cloud-native deployment basics
+- infrastructure as code concepts
 - event-driven architecture
-- MLOps practices
-- practical experience with modern data tooling
+- MLOps workflows
+- hands-on experience with modern data tooling
 
 It is also highly adaptable. The same pattern can be reused for other domains such as e-commerce, IoT, logistics, or finance.
 
